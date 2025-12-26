@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Element Looking at Cursor</title>
+<style>
+  body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #222;
+  }
+
+  .eye {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pupil {
+    width: 30px;
+    height: 30px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    transition: transform 0.1s ease-out;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="eye">
+  <div class="pupil"></div>
+</div>
+
+<div class="eye" style="margin-left: 100px;">
+  <div class="pupil"></div>
+</div>
+
+<script>
+const eyes = document.querySelectorAll('.eye');
+
+document.addEventListener('mousemove', (e) => {
+  eyes.forEach((eye) => {
+    const pupil = eye.querySelector('.pupil');
+    const eyeRect = eye.getBoundingClientRect();
+    const pupilRect = pupil.getBoundingClientRect();
+
+    const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+    const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+
+    const dx = e.clientX - eyeCenterX;
+    const dy = e.clientY - eyeCenterY;
+    const angle = Math.atan2(dy, dx);
+
+    // Distance of cursor from eye center
+    const m = Math.sqrt(dx * dx + dy * dy);
+
+    // Sphere radius = 120% of pupil's larger side
+    const pupilMaxSide = Math.max(pupilRect.width, pupilRect.height);
+    const R = 1 * pupilMaxSide;
+
+    // Apply spherical projection formula (non-repeating)
+    let p = Math.min(m, R); // or use R * Math.tanh(m / R) for smooth easing
+
+
+    const pupilX = Math.cos(angle) * p;
+    const pupilY = Math.sin(angle) * p;
+
+    pupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
+  });
+});
+
+</script>
+
+</body>
+</html>
