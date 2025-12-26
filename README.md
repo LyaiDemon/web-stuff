@@ -1,1 +1,1 @@
-vibe-coded using Microsoft Co-Pilot
+vibe-coded using Co-Pilot in Microsoft Edge
