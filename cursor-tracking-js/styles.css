@@ -1,0 +1,28 @@
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #222;
+  }
+
+  .eye {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pupil {
+    width: 30px;
+    height: 30px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    transition: transform 0.1s ease-out;
+  }
