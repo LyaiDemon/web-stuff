@@ -36,8 +36,55 @@ function movePupils(e) {
   });
 }
 
-// Normal tracking
-document.addEventListener('pointermove', movePupils);
+function handleMove(x, y) {
+  movePupils({ clientX: x, clientY: y });
+}
+
+// Throttle utility: ensures the function runs at most once per frame
+function throttleRAF(fn) {
+  let scheduled = false;
+  let lastArgs;
+
+  return function (...args) {
+    lastArgs = args;
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame(() => {
+        fn(...lastArgs);
+        scheduled = false;
+      });
+    }
+  };
+}
+
+const throttledHandleMove = throttleRAF(handleMove);
+
+// Normal tracking (desktop + modern browsers)
+document.addEventListener('pointermove', (e) => {
+  if (e.clientX && e.clientY) {
+    throttledHandleMove(e.clientX, e.clientY);
+  }
+});
 
 // Fallback tracking during native drag (text/image drag)
-document.addEventListener('drag', movePupils);
+document.addEventListener('drag', (e) => {
+  if (e.clientX && e.clientY) {
+    throttledHandleMove(e.clientX, e.clientY);
+  }
+});
+
+// Tracking during swipe/touch on mobile
+document.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 0) return;
+
+  let sumX = 0, sumY = 0;
+  for (let i = 0; i < e.touches.length; i++) {
+    sumX += e.touches[i].clientX;
+    sumY += e.touches[i].clientY;
+  }
+
+  const avgX = sumX / e.touches.length;
+  const avgY = sumY / e.touches.length;
+
+  throttledHandleMove(avgX, avgY);
+}, { passive: true });
