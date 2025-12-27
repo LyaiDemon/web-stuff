@@ -7,7 +7,7 @@ body {
     background: #222;
   }
 
-  .eye {
+.eye {
     width: 100px;
     height: 100px;
     background: white;
@@ -18,7 +18,7 @@ body {
     align-items: center;
   }
 
-  .pupil {
+.pupil {
     width: 30px;
     height: 30px;
     background: black;
